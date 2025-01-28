@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计算机242服务大厅—新</title>
+    <style>
+        /* CSS 变量定义 */
+        :root {
+            --primary-color: #4CAF50; 
+            --secondary-color: #388E3C; 
+            --button-bg-color: rgba(255, 255, 255, 0.45); /* 按钮背景改为45%透明度 */
+            --button-border-color: transparent; /* 去掉按钮边框 */
+            --button-border-width: 0px; /* 去掉按钮边框 */
+            --button-font-size: 1.65rem; 
+            --button-text-color: black; 
+            --button-width: 45%; 
+            --button-height: 80px; 
+            --button-margin: 10px;
+            --button-container-top-offset: -100px; /* 按钮容器距离顶部矩形模块的距离 */
+            --container-max-width: 800px; 
+            --footer-height: 60px; /* 底部黑色模块高度 */
+            --footer-bg-color: rgba(0, 0, 0, 0.45); /* 底部背景改为黑色透明度45% */
+            --footer-text-color: white; /* 底部文字颜色改为白色 */
+            --body-bg-color: url('首页背景.png') no-repeat center center fixed, linear-gradient(to bottom, #e0f7fa, white); 
+            --body-bg-size: cover; 
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            --top-rectangle-bg-color: rgba(255, 255, 255, 0.45); /* 上方模块背景颜色 */
+            --top-rectangle-border-radius: 15px; /* 上方模块圆角半径 */
+            --top-rectangle-padding: 10px; /* 上方模块内边距 */
+            --top-rectangle-margin-bottom: 0px; /* 去掉底部边距 */
+            --top-rectangle-border: none; /* 去掉边框 */
+            --top-rectangle-top: 0px; /* 上方模块紧贴顶部 */
+            --top-rectangle-width: 96%; /* 上方模块宽度为屏幕宽度的96% */
+            --top-rectangle-height: 130px; /* 上方模块高度为120px */
+            --top-rectangle-offset: 25px; /* 顶端矩形模块到屏幕顶端的距离 */
+            --footer-rectangle-border: none; /* 底部边框去掉 */
+            --footer-rectangle-padding: 5px; 
+            --footer-font-size: 14px; /* 调节底部矩形内文字大小 */
+            --footer-top-margin: 10px; 
+            --footer-bottom-margin: 0px; /* 底部不留边距 */
+            --footer-compressed-font-size: 2px; 
+        }
+
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 主体布局 */
+        body {
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; 
+            align-items: center;
+            background: var(--body-bg-color);
+            background-size: var(--body-bg-size); 
+            font-family: var(--font-family);
+            color: var(--button-text-color);
+        }
+
+        /* 调整背景图层顺序，确保背景图片在渐变上方 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('首页背景.png') no-repeat center center fixed;
+            z-index: -1; /* 将背景图片置于最底层 */
+        }
+
+        /* 上方模块 */
+        .top-rectangle {
+            position: fixed; /* 固定定位 */
+            top: var(--top-rectangle-offset); /* 距离屏幕顶部的距离 */
+            left: 50%; /* 左边定位到50%，即页面的中间 */
+            transform: translateX(-50%); /* 通过平移自身宽度的一半，实现水平居中 */
+            width: var(--top-rectangle-width); /* 宽度为屏幕宽度的96% */
+            height: var(--top-rectangle-height); /* 高度为120px */
+            background-color: var(--top-rectangle-bg-color); /* 背景颜色 */
+            border-radius: var(--top-rectangle-border-radius); /* 圆角半径 */
+            padding: var(--top-rectangle-padding); /* 内边距 */
+            z-index: 1000; /* 确保上方模块在最上层 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 当前时间样式 */
+        .current-time {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* 倒计时样式 */
+        .countdown {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* 祝福语样式 */
+        .blessing {
+            display: none; /* 初始隐藏 */
+            margin-top: 0.6666px; /* 第2段文字下方间距 */
+            text-align: center; /* 祝福语居中 */
+        }
+
+        .blessing p {
+            margin: 2.7777px 0; /* 第3段文字距离第2段上下间距 */
+            font-size: 1.2rem; /* 根据需要调整字体大小 */
+        }
+
+        /* 按钮容器 */
+        .button-container {
+            width: 100%;
+            max-width: var(--container-max-width);
+            padding: var(--button-margin);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: var(--button-container-top-offset); /* 按钮容器距离顶部矩形模块的距离 */
+        }
+
+        /* 按钮行通用样式 */
+        .button-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between; 
+            margin-bottom: calc(var(--button-margin) * 1.5); /* 将按钮行间距改为45% */
+            gap: calc(var(--button-margin) * 0.45); 
+        }
+
+        /* 按钮通用样式 */
+        .button {
+            width: var(--button-width);
+            height: var(--button-height);
+            background-color: var(--button-bg-color);
+            border: var(--button-border-width) solid var(--button-border-color);
+            display: flex;
+            justify-content: center; /* 按钮文字水平居中 */
+            align-items: center;
+            font-size: var(--button-font-size);
+            color: var(--button-text-color);
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        /* 按钮悬停效果 */
+        .button:hover {
+            background-color: #55cfff79;
+            border-color: #fff1f177;
+        }
+
+        /* 按钮点击效果 */
+        .button:active {
+            background-color: #4cccff79;
+        }
+
+        /* 第一行按钮对齐方式 */
+        .button-row-1 {
+            justify-content: center;
+        }
+
+        /* 其他按钮行对齐方式 */
+        .button-row-2,
+        .button-row-3,
+        .button-row-4,
+        .button-row-5,
+        .button-row-6 {
+            justify-content: space-between;
+        }
+
+        /* 第一行按钮宽度调整 */
+        .button-row-1 .button {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        /* 其他按钮行按钮宽度调整 */
+        .button-row-2 .button,
+        .button-row-3 .button,
+        .button-row-4 .button,
+        .button-row-5 .button,
+        .button-row-6 .button {
+            width: 48%;
+            margin: 0;
+        }
+
+        /* 底部版权信息区域 */
+        footer {
+            width: 100%;
+            background-color: var(--footer-bg-color); /* 黑色透明度45% */
+            color: var(--footer-text-color); /* 白色字体 */
+            text-align: center;
+            padding: var(--footer-rectangle-padding);
+            position: relative; /* 相对定位 */
+            height: var(--footer-height); /* 可调高度 */
+            margin-top: var(--footer-top-margin);
+            margin-bottom: var(--footer-bottom-margin);
+            border-top-left-radius: 10px; /* 上左角圆边 */
+            border-top-right-radius: 10px; /* 上右角圆边 */
+        }
+
+        /* 底部版权信息段落样式 */
+        footer .footer-rectangle {
+            position: absolute; /* 绝对定位 */
+            bottom: 0; /* 底部对齐 */
+            left: 0;
+            right: 0;
+            padding: var(--footer-rectangle-padding);
+        }
+
+        footer .footer-rectangle p {
+            margin: 0;
+            font-size: var(--footer-font-size);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-rectangle">
+        <div class="current-time">
+            <span>当前北京时间</span><br>
+            <span id="time"></span>
+        </div>
+        <div class="countdown">
+            <span id="countdown-label">距离春节还有</span><br>
+            <span id="countdown"></span>
+        </div>
+        <div class="blessing">
+            <p>新年快乐！计算机242祝大家身体健康、万事如意、财源广进、学业有成！</p>
+        </div>
+    </div>
+
+    <div class="button-container">
+        <!-- 第一行按钮 -->
+        <div class="button-row button-row-2">
+            <a href="值日安排.html" class="button">值日安排</a>
+            <a href="课程时间.html" class="button">课程时间</a>
+        </div>
+
+        <!-- 第二行按钮 -->
+        <div class="button-row button-row-2">
+            <a href="读书情况.html" class="button">读书情况</a>
+            <a href="教师联系.html" class="button">教师联系</a>
+        </div>
+
+        <!-- 第三行按钮 -->
+        <div class="button-row button-row-3">
+            <a href="参考答案.html" class="button">参考答案</a>
+            <a href="https://news.cctv.com/mobile/" class="button">每日新闻</a>
+        </div>
+        <!-- 第四行按钮 -->
+        <div class="button-row button-row-4">
+            <a href="作业考勤.html" class="button">作业考勤</a>
+            <a href="知识拓展.html" class="button">知识拓展</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-rectangle">
+            <p>版权©梁镇浩 2024-2099</p>
+            <p>联系方式：3628529838@qq.com</p>
+            <p>禁止用于非法用途，违者必究！</p>
+        </div>
+    </footer>
+
+    <script>
+        // 更新当前时间函数
+        function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const formattedTime = `${year}年${month}月${day}日 ${hours}时${minutes}分${seconds}秒`;
+            document.getElementById('time').textContent = formattedTime;
+        }
+
+        // 初始化当前时间并设置定时器每秒更新
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 更新倒计时函数
+        function updateCountdown() {
+            const endDate = new Date("2025-01-30T00:00:00"); // 修改为日期
+            const now = new Date();
+            const diff = endDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('countdown').textContent = "新年快乐！计算机242祝大家身体健康、万事如意、财源广进、学业有成！";
+                document.getElementById('countdown-label').style.display = "none"; 
+                document.getElementById('countdown').style.textAlign = "center"; 
+                document.getElementById('blessing').style.display = "block"; // 显示祝福语
+                document.getElementById('button-container').style.display = "none"; // 隐藏按钮容器（如果需要）
+                clearInterval(intervalId); // 停止倒计时
+            } else {
+                const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const formattedCountdown = `${months}个月${days}天${hours}小时${minutes}分钟${seconds}秒`;
+                document.getElementById('countdown').textContent = formattedCountdown;
+            }
+        }
+
+        // 初始化倒计时并设置定时器每秒更新
+        updateCountdown();
+        const intervalId = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>

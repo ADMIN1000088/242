@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程与时间表格</title>
+    <style>
+        /* CSS 变量定义 */
+        :root {
+            --background-image: url('课程时间.png');
+            --background-size: cover;
+            --background-repeat: no-repeat;
+            --background-position: center center;
+            --image-width: 100%;
+            --image-display: block;
+            --image-margin: 20px auto;
+        }
+
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 主体布局 */
+        body {
+            width: 100%;
+            height: 100vh;
+            background: var(--background-image);
+            background-size: var(--background-size);
+            background-repeat: var(--background-repeat);
+            background-position: var(--background-position);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        /* 图片容器 */
+        .image-container {
+            width: var(--image-width);
+            display: var(--image-display);
+            margin: var(--image-margin);
+        }
+
+        /* 图片样式 */
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 响应式调整（可选） */
+        @media (max-width: 600px) {
+            :root {
+                --image-margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 上方图片 -->
+    <div class="image-container">
+        <img src="课程表.PNG" alt="图片01">
+    </div>
+
+    <!-- 下方图片 -->
+    <div class="image-container">
+        <img src="作息表.PNG" alt="图片02">
+    </div>
+</body>
+</html>
